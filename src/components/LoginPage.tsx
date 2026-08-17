@@ -14,8 +14,8 @@ interface LoginPageProps {
 }
 
 export function LoginPage({ onNavigate, onLogin }: LoginPageProps) {
-  const [email, setEmail] = useState("sarah@example.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
