@@ -12,6 +12,7 @@ interface RecipeCardProps {
 export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
   const categories = getRecipeCategories(recipe.recipe_id);
   const author = getUserById(recipe.user_id);
+  const authorName = recipe.author_name || author?.name || "Chef";
   const averageRating = getAverageRating(recipe.recipe_id);
   const reviewCount = getReviewCount(recipe.recipe_id);
 
@@ -30,52 +31,61 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
 
   return (
     <Card 
-      className="overflow-hidden hover:shadow-xl transition-all cursor-pointer group"
+      className="overflow-hidden hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between h-full"
       onClick={onClick}
     >
-      <div className="relative h-48 overflow-hidden bg-slate-200">
-        {recipe.image && (
-          <ImageWithFallback
-            src={recipe.image}
-            alt={recipe.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-          />
-        )}
-        <div className="absolute top-3 right-3 flex gap-2">
-          <Badge className={getDifficultyColor(recipe.difficulty)}>
-            {recipe.difficulty}
-          </Badge>
-        </div>
-      </div>
-      <CardContent className="p-5">
-        <h3 className="text-slate-800 mb-2 line-clamp-1">{recipe.title}</h3>
-        <p className="text-slate-600 text-sm mb-3 line-clamp-2">
-          {recipe.description}
-        </p>
-        
-        {averageRating > 0 && (
-          <div className="flex items-center gap-1 mb-3">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-slate-700">{averageRating}</span>
-            <span className="text-slate-500 text-sm">({reviewCount})</span>
-          </div>
-        )}
-        
-        <div className="flex flex-wrap gap-2 mb-4">
-          {categories.slice(0, 2).map((category) => (
-            <Badge key={category.category_id} variant="outline" className="text-xs">
-              {category.name}
+      <div>
+        <div className="relative h-48 overflow-hidden bg-slate-200">
+          {recipe.image && (
+            <ImageWithFallback
+              src={recipe.image}
+              alt={recipe.title}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            />
+          )}
+          <div className="absolute top-3 right-3 flex gap-2">
+            <Badge className={getDifficultyColor(recipe.difficulty)}>
+              {recipe.difficulty}
             </Badge>
-          ))}
+          </div>
         </div>
-        <div className="flex items-center justify-between text-sm text-slate-500">
+        <CardContent className="p-5">
+          <h3 className="text-slate-800 font-semibold text-lg mb-1 line-clamp-1 group-hover:text-orange-600 transition-colors">{recipe.title}</h3>
+          <p className="text-slate-600 text-sm mb-3 line-clamp-2">
+            {recipe.description}
+          </p>
+          
+          <div className="flex items-center gap-1 mb-3">
+            {averageRating > 0 ? (
+              <>
+                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                <span className="text-slate-700 font-medium">{averageRating}</span>
+                <span className="text-slate-500 text-xs">({reviewCount})</span>
+              </>
+            ) : (
+              <span className="text-slate-400 text-xs italic">No reviews yet</span>
+            )}
+          </div>
+          
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {categories.slice(0, 2).map((category) => (
+              <Badge key={category.category_id} variant="outline" className="text-xs">
+                {category.name}
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+      </div>
+
+      <CardContent className="px-5 pb-5 pt-0 mt-auto">
+        <div className="flex items-center justify-between text-xs text-slate-500 pt-3 border-t border-slate-100">
           <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
+            <Clock className="h-3.5 w-3.5 text-orange-500" />
             <span>{recipe.cooking_time} min</span>
           </div>
           <div className="flex items-center gap-1">
-            <User className="h-4 w-4" />
-            <span className="truncate max-w-[100px]">{author?.name}</span>
+            <User className="h-3.5 w-3.5 text-purple-500" />
+            <span className="truncate max-w-[120px] font-medium text-slate-700">{authorName}</span>
           </div>
         </div>
       </CardContent>

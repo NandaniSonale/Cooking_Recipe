@@ -40,18 +40,18 @@ export function HomePage({ onNavigate, onRecipeClick }: HomePageProps) {
         
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+            <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full mb-6 border border-orange-200 shadow-sm">
               <ChefHat className="h-5 w-5 text-orange-500" />
-              <span className="text-slate-600">Your Digital Recipe Collection</span>
+              <span className="text-slate-800 font-semibold text-sm">Your Ultimate Recipe Collection</span>
             </div>
-            <h1 className="mb-6 text-slate-800">
-              Discover, Create & Share
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">
-                Delicious Recipes
+            <h1 className="mb-6 text-slate-800 font-bold text-4xl md:text-5xl">
+              Discover 500+ Delicious Recipes
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 mt-2">
+                Crafted for Every Culinary Enthusiast
               </span>
             </h1>
-            <p className="text-slate-600 mb-8 max-w-2xl mx-auto">
-              Join our community of food lovers. Browse thousands of recipes, save your favorites, and share your culinary creations with the world.
+            <p className="text-slate-600 mb-8 max-w-2xl mx-auto text-lg">
+              Explore 500+ delicious recipes prepared by master chefs, complete with precise ingredients and step-by-step cooking guides.
             </p>
             <div className="flex gap-4 justify-center">
               <Button

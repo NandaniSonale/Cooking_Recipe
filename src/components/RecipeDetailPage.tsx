@@ -59,11 +59,14 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
   const ingredients = getRecipeIngredients(recipe.recipe_id);
   const steps = getRecipeSteps(recipe.recipe_id);
   const author = getUserById(recipe.user_id);
+  const authorName = recipe.author_name || author?.name || "Master Chef";
   const reviews = getRecipeReviews(recipe.recipe_id);
   const averageRating = getAverageRating(recipe.recipe_id);
   const reviewCount = getReviewCount(recipe.recipe_id);
   const favorite = isFavorite(currentUser.user_id, recipe.recipe_id);
   const isOwner = recipe.user_id === currentUser.user_id;
+
+
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -134,7 +137,6 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
                 <Button
                   variant="outline"
                   onClick={() => {
-                    // Navigate to edit page (we'll handle this by setting edit mode)
                     toast.info("Edit functionality coming soon!");
                   }}
                 >
@@ -180,7 +182,7 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
         </div>
 
         {/* Hero Image */}
-        <div className="relative h-[400px] rounded-2xl overflow-hidden mb-8 bg-slate-200">
+        <div className="relative h-[400px] rounded-2xl overflow-hidden mb-8 bg-slate-200 shadow-xl">
           {recipe.image && (
             <ImageWithFallback
               src={recipe.image}
@@ -188,17 +190,17 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
               className="w-full h-full object-cover"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <div className="flex flex-wrap gap-2 mb-4">
               {categories.map((category) => (
-                <Badge key={category.category_id} variant="secondary">
+                <Badge key={category.category_id} variant="secondary" className="bg-white/20 backdrop-blur-md text-white border-0">
                   {category.name}
                 </Badge>
               ))}
             </div>
-            <h1 className="mb-2 text-white">{recipe.title}</h1>
-            <p className="text-white/90 max-w-2xl">
+            <h1 className="mb-2 text-white text-3xl md:text-4xl font-bold">{recipe.title}</h1>
+            <p className="text-white/90 max-w-2xl text-lg">
               {recipe.description}
             </p>
           </div>
@@ -213,7 +215,7 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
               </div>
               <div>
                 <p className="text-sm text-slate-600">Time</p>
-                <p className="text-slate-800">{recipe.cooking_time} min</p>
+                <p className="text-slate-800 font-semibold">{recipe.cooking_time} min</p>
               </div>
             </CardContent>
           </Card>
@@ -238,8 +240,8 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
                 <User className="h-6 w-6 text-pink-600" />
               </div>
               <div>
-                <p className="text-sm text-slate-600">Author</p>
-                <p className="text-slate-800">{author?.name}</p>
+                <p className="text-sm text-slate-600">Prepared By</p>
+                <p className="text-slate-800 font-semibold">{authorName}</p>
               </div>
             </CardContent>
           </Card>
@@ -253,21 +255,23 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
                 <p className="text-sm text-slate-600">Rating</p>
                 {averageRating > 0 ? (
                   <div className="flex items-center gap-1">
-                    <span className="text-slate-800">{averageRating}</span>
+                    <span className="text-slate-800 font-semibold">{averageRating}</span>
                     <span className="text-slate-500 text-sm">({reviewCount})</span>
                   </div>
                 ) : (
-                  <p className="text-slate-500 text-sm">No reviews</p>
+                  <p className="text-slate-500 text-sm">No reviews yet</p>
                 )}
               </div>
             </CardContent>
           </Card>
         </div>
 
+
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Ingredients */}
           <div className="lg:col-span-1">
-            <Card>
+            <Card className="h-full">
               <CardHeader>
                 <CardTitle>Ingredients</CardTitle>
               </CardHeader>
@@ -275,9 +279,9 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
                 <div className="space-y-3">
                   {ingredients.length > 0 ? (
                     ingredients.map((ingredient, index) => (
-                      <div key={index} className="flex justify-between items-center">
-                        <span className="text-slate-700">{ingredient.name}</span>
-                        <span className="text-slate-500">{ingredient.amount}</span>
+                      <div key={index} className="flex justify-between items-center py-1.5 border-b border-slate-100 last:border-0">
+                        <span className="text-slate-700 font-medium">{ingredient.name}</span>
+                        <span className="text-slate-500 text-sm">{ingredient.amount}</span>
                       </div>
                     ))
                   ) : (
@@ -290,9 +294,9 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
 
           {/* Instructions */}
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="h-full">
               <CardHeader>
-                <CardTitle>Instructions</CardTitle>
+                <CardTitle>Cooking Instructions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
@@ -300,11 +304,11 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
                     steps.map((step, index) => (
                       <div key={step.step_id}>
                         <div className="flex gap-4">
-                          <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white">
+                          <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                             {step.step_number}
                           </div>
-                          <div className="flex-1">
-                            <p className="text-slate-700">{step.instruction}</p>
+                          <div className="flex-1 pt-1">
+                            <p className="text-slate-700 leading-relaxed">{step.instruction}</p>
                           </div>
                         </div>
                         {index < steps.length - 1 && <Separator className="mt-6" />}
@@ -327,7 +331,7 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
           <CardContent>
             {/* Add Review */}
             <div className="mb-8 p-6 bg-slate-50 rounded-lg">
-              <h3 className="text-slate-800 mb-4">Write a Review</h3>
+              <h3 className="text-slate-800 mb-4 font-semibold">Write a Review</h3>
               
               <div className="mb-4">
                 <p className="text-sm text-slate-600 mb-2">Your Rating</p>
@@ -382,13 +386,13 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
                       <div className="flex items-start gap-4">
                         <Avatar>
                           <AvatarFallback className="bg-gradient-to-br from-orange-400 to-pink-500 text-white">
-                            {reviewer?.name.charAt(0)}
+                            {(reviewer?.name || currentUser.name).charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <div>
-                              <p className="text-slate-800">{reviewer?.name}</p>
+                              <p className="text-slate-800 font-medium">{reviewer?.name || currentUser.name}</p>
                               <p className="text-sm text-slate-500">{formatDate(review.created_at)}</p>
                             </div>
                             <div className="flex items-center gap-1">
@@ -411,9 +415,10 @@ export function RecipeDetailPage({ recipeId, onNavigate, currentUser, onRecipeCl
                   );
                 })
               ) : (
-                <p className="text-slate-500 text-center py-8">
-                  No reviews yet. Be the first to review this recipe!
-                </p>
+                <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+                  <p className="text-slate-600 font-medium mb-1">No reviews yet</p>
+                  <p className="text-slate-400 text-sm">Be the first to review this recipe prepared by {authorName}!</p>
+                </div>
               )}
             </div>
           </CardContent>
